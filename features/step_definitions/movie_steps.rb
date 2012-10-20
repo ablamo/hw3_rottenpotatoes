@@ -41,4 +41,42 @@ When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
   # HINT: use String#split to split up the rating_list, then
   #   iterate over the ratings and reuse the "When I check..." or
   #   "When I uncheck..." steps in lines 89-95 of web_steps.rb
+  all_ratings = Movie.all_ratings
+  selected_ratings = []
+  unselected_ratings = []
+  if uncheck
+    unselected_ratings = rating_list.split(/,\s*/)
+    selected_ratings = all_ratings - unselected_ratings
+  else
+    selected_ratings = rating_list.split(/,\s*/)
+    unselected_ratings = all_ratings - selected_ratings
+  end
+  selected_ratings.each do |select| 
+    step %Q{I check "ratings_#{select}"}
+  end
+  unselected_ratings.each do |select|
+    step %Q{I uncheck "ratings_#{select}"}
+  end    
+end
+
+Then /I should( not)? see the following movies: (.*)/ do |not_see, movie_list|
+  proccessed_movie_list = movie_list.split(/['|"]/).reject{ |e| e.empty? || e == ', ' || e== ','}
+  proccessed_movie_list.each do |movie|
+    step %Q{I should#{not_see} see "#{movie}"}
+  end
+end
+
+When /I (un)?check all the ratings/ do |uncheck|
+  all_ratings = Movie.all_ratings
+  all_ratings_str = ""
+  all_ratings.each do |rat|
+    all_ratings_str = rat + ", " + all_ratings_str
+  end
+  all_ratings_str.gsub!(/, $/, '')
+  step %Q{I #{uncheck}check the following ratings: #{all_ratings_str}}
+end
+
+Then /I should see all of the movies/ do
+  elementos = Movie.all.length + 1 # for the header
+  assert elementos == page.all('#movies tr').size
 end
