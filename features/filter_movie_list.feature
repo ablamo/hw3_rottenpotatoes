@@ -39,8 +39,8 @@ Scenario: no ratings selected
   # see assignment
   Given I uncheck all the ratings
   And I press "Refresh"
-  #Then I should be redirected to the RottenPotatoes home page
-  Then I should be on the RottenPotatoes home page
+  Then I should be redirected to the RottenPotatoes home page
+  #Then I should be on the RottenPotatoes home page
 
 Scenario: all ratings selected
   # see assignment

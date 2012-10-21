@@ -67,6 +67,20 @@ Then /I should( not)? see the following movies: (.*)/ do |not_see, movie_list|
   end
 end
 
+Then /^I should be redirected to (.+)$/ do |page_name|
+  # This code works
+  #puts page.driver.request.env["HTTP_REFERER"]
+  #puts page.driver.status_code
+  #puts URI.parse(current_url)
+  
+# This code Fails:
+  #puts "el referer: " + request.headers['HTTP_REFERER']
+  #request.headers['HTTP_REFERER'].should_not be_nil
+  #request.headers['HTTP_REFERER'].should_not == request.request_uri
+
+  step "I should be on #{page_name}"
+end
+
 When /I (un)?check all the ratings/ do |uncheck|
   all_ratings = Movie.all_ratings
   all_ratings_str = ""
